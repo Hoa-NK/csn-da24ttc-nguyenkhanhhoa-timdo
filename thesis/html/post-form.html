@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#c82032">
+    <title>Đăng tin – ReFind
+    </title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/forms.css">
+    <link rel="stylesheet" href="../css/post-form.css">
+  </head>
+  <body data-page="post-form">
+    <header class="site-header" id="site-header">
+      <div class="nav"><a class="brand" href="index.html" aria-label="ReFind, trang chủ"><img src="../assets/logo.png" alt=""><span>ReFind</span></a>
+        <form class="search-form" id="search-form" role="search">
+          <input type="search" id="search-query" name="q" placeholder="Tìm tên đồ vật hoặc địa điểm…" aria-label="Tìm tên đồ vật hoặc địa điểm">
+          <div class="date-search"><button class="date-toggle" type="button" id="date-toggle" aria-label="Tìm theo ngày" title="Tìm theo ngày" aria-expanded="false" aria-controls="date-popover"><svg class="date-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 3.5v3M16.5 3.5v3M3.5 9.5h17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+            <div class="date-popover" id="date-popover" hidden>
+              <label for="search-date">Ngày xảy ra
+              </label>
+              <input type="date" id="search-date">
+              <div class="date-popover-actions"><button type="button" id="clear-date">Xóa ngày</button><button type="button" class="apply-date">Tìm kiếm</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </header>
+    <main class="container narrow-container"><a class="detail-back" href="index.html">Quay lại</a>
+      <section class="form-panel panel">
+        <h1 class="form-title-bar" id="post-form-title">
+          Đăng tin mới
+        </h1>
+        <form id="post-form">
+          <label for="post-type">Loại tin
+          </label>
+          <select id="post-type"><option value="found">Đồ nhặt được</option><option value="lost">Đồ thất lạc</option>
+          </select>
+          <label for="post-title">Tên đồ vật <span class="required">*</span>
+          </label>
+          <input id="post-title" maxlength="100" required>
+          <label for="post-description">Mô tả
+          </label>
+          <textarea id="post-description" rows="5" maxlength="1200" placeholder="Màu sắc, đặc điểm nhận dạng, nơi tìm thấy hoặc lần cuối nhìn thấy…">
+          </textarea>
+          <div class="field-row">
+            <div>
+              <label for="post-place">Địa điểm
+              </label>
+              <input id="post-place" maxlength="160" placeholder="Ví dụ: thư viện tầng 2">
+            </div>
+            <div>
+              <label for="post-date">Ngày
+              </label>
+              <input id="post-date" type="date">
+            </div>
+          </div>
+          <label for="post-contact">Thông tin liên hệ <span class="required">*</span>
+          </label>
+          <input id="post-contact" maxlength="160" placeholder="Số điện thoại, Zalo hoặc email" required>
+          <label for="post-image">Ảnh đồ vật
+          </label>
+          <input id="post-image" type="file" accept="image/*">
+          <p class="field-hint">
+            Ảnh sẽ được thu nhỏ để lưu trên thiết bị này.
+          </p>
+          <div id="image-preview" class="image-preview">
+          </div>
+          <p class="form-message" id="form-message" role="alert">
+          </p>
+          <div class="form-actions"><button class="button" type="submit" id="save-post">Đăng tin</button><a class="button button-outline" href="index.html">Hủy</a>
+          </div>
+        </form>
+      </section>
+    </main>
+    <footer id="site-footer">
+      ReFind
+    </footer>
+    <script src="../js/storage.js">
+    </script>
+    <script src="../js/app.js">
+    </script>
+  </body>
+</html>
+

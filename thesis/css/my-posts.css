@@ -1,0 +1,33 @@
+.my-posts-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 20px;
+  padding: 12px 17px;
+  border-radius: 11px;
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 5px 14px rgba(140,16,32,.14);
+}
+.my-posts-bar h1 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.3;
+}
+.my-posts-bar .button {
+  background: #fff;
+  color: var(--red);
+  border-color: #fff;
+}
+.my-posts-bar .button:hover {
+  background: var(--red-soft);
+}
+@media(max-width:620px) {
+  .my-posts-bar {
+    padding: 11px 13px;
+  }
+  .my-posts-bar h1 {
+    font-size: 19px;
+  }
+}

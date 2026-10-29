@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#c82032">
+    <title>Đăng ký – ReFind
+    </title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/forms.css">
+    <link rel="stylesheet" href="../css/register.css">
+  </head>
+  <body data-page="register">
+    <header class="site-header" id="site-header">
+      <div class="nav"><a class="brand" href="index.html" aria-label="ReFind, trang chủ"><img src="../assets/logo.png" alt=""><span>ReFind</span></a>
+        <form class="search-form" id="search-form" role="search">
+          <input type="search" id="search-query" name="q" placeholder="Tìm tên đồ vật hoặc địa điểm…" aria-label="Tìm tên đồ vật hoặc địa điểm">
+          <div class="date-search"><button class="date-toggle" type="button" id="date-toggle" aria-label="Tìm theo ngày" title="Tìm theo ngày" aria-expanded="false" aria-controls="date-popover"><svg class="date-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 3.5v3M16.5 3.5v3M3.5 9.5h17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+            <div class="date-popover" id="date-popover" hidden>
+              <label for="search-date">Ngày xảy ra
+              </label>
+              <input type="date" id="search-date">
+              <div class="date-popover-actions"><button type="button" id="clear-date">Xóa ngày</button><button type="button" class="apply-date">Tìm kiếm</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <nav class="nav-actions" id="nav-actions" aria-label="Tài khoản"><a class="header-link" href="login.html">Đăng nhập</a><a class="header-link" href="register.html">Đăng ký</a></nav>
+      </div>
+    </header>
+    <main class="container narrow-container">
+      <a class="detail-back" href="index.html">Quay lại</a>
+      <section class="form-panel panel">
+        <h1 class="form-title-bar">
+          Đăng ký ReFind
+        </h1>
+        <form id="register-form">
+          <label for="name">Họ tên
+          </label>
+          <input id="name" autocomplete="name" required>
+          <label for="username">Tên đăng nhập
+          </label>
+          <input id="username" autocomplete="username" minlength="3" maxlength="24" required>
+          <p class="field-hint">
+            3–24 ký tự; dùng chữ không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.
+          </p>
+          <label for="email">Email
+          </label>
+          <input id="email" type="email" autocomplete="email" required>
+          <label for="password">Mật khẩu
+          </label>
+          <input id="password" type="password" minlength="6" autocomplete="new-password" required>
+          <label for="password-confirm">Nhập lại mật khẩu
+          </label>
+          <input id="password-confirm" type="password" minlength="6" autocomplete="new-password" required>
+          <p class="form-message" id="form-message" role="alert">
+          </p>
+          <button class="button button-wide" type="submit">Tạo tài khoản</button>
+        </form>
+        <p class="form-switch">
+          Đã có tài khoản? <a href="login.html">Đăng nhập</a>
+        </p>
+      </section>
+    </main>
+    <footer id="site-footer">
+      ReFind
+    </footer>
+    <script src="../js/storage.js">
+    </script>
+    <script src="../js/app.js">
+    </script>
+  </body>
+</html>

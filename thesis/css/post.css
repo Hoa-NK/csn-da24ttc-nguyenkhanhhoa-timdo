@@ -34,6 +34,35 @@
 .detail-copy .description {
   white-space: pre-wrap;
 }
+.detail-map-section {
+  margin-top: 28px;
+}
+.detail-map-section h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+.detail-map-section p {
+  color: var(--muted);
+}
+.detail-location-map {
+  width: min(100%, 620px);
+  aspect-ratio: 1 / 1;
+  height: auto;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #f3f4f6;
+  z-index: 0;
+}
+.map-open-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--red);
+  font-weight: 650;
+}
+.map-open-link:hover {
+  text-decoration: underline;
+}
 .detail-badges {
   display: flex;
   flex-wrap: wrap;
@@ -49,6 +78,8 @@
 .detail-actions select {
   width: auto;
   min-width: 140px;
+  font-family: Arial, sans-serif;
+  font-weight: 400;
 }
 .button-danger {
   border-color: #84202b;
@@ -77,5 +108,8 @@
   }
   .detail-actions select {
     flex: 1;
+  }
+  .detail-location-map {
+    width: 100%;
   }
 }

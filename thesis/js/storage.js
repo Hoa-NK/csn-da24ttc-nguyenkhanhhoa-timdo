@@ -172,8 +172,14 @@ const queryParam = (key) => new URLSearchParams(location.search).get(key);
 const displayDate = (value) => {
   if (!value) return 'Chưa cập nhật';
 
-  const date = new Date(`${value}T00:00:00`);
-  return Number.isNaN(date.getTime()) ? escapeHTML(value) : date.toLocaleDateString('vi-VN');
+  const match = String(value).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (match) return `${match[3].padStart(2, '0')}/${match[2].padStart(2, '0')}/${match[1]}`;
+  const formatted = String(value).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (formatted) return `${formatted[1].padStart(2, '0')}/${formatted[2].padStart(2, '0')}/${formatted[3]}`;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return escapeHTML(value);
+  return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
 };
 
 const typeLabel = (type) => (type === 'found' ? 'Đồ nhặt được' : 'Đồ thất lạc');

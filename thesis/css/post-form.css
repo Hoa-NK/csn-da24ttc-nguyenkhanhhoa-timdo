@@ -1,3 +1,46 @@
 [data-page=post-form] .form-panel {
   max-width: 720px;
 }
+.location-picker {
+  margin: 20px 0;
+}
+.location-picker-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+.location-picker-heading h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.location-picker-heading .field-hint {
+  margin: 4px 0 0;
+}
+.location-map {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  max-height: 620px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f3f4f6;
+  z-index: 0;
+}
+.map-feedback {
+  min-height: 24px;
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+@media(max-width:520px) {
+  .location-picker-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .location-map {
+    max-height: none;
+  }
+}

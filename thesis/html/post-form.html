@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/forms.css">
     <link rel="stylesheet" href="../css/post-form.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   </head>
   <body data-page="post-form">
     <header class="site-header" id="site-header">
@@ -19,7 +20,7 @@
             <div class="date-popover" id="date-popover" hidden>
               <label for="search-date">Ngày xảy ra
               </label>
-              <input type="date" id="search-date">
+              <div class="date-input-row"><input type="text" id="search-date" inputmode="numeric" placeholder="dd/mm/yyyy" maxlength="10" pattern="(?:0[1-9]|[12][0-9]|3[01])/(?:0[1-9]|1[0-2])/[0-9]{4}" title="Nhập ngày theo định dạng dd/mm/yyyy"><span class="date-picker-control"><button type="button" aria-label="Chọn ngày"><svg class="date-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 3.5v3M16.5 3.5v3M3.5 9.5h17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><input type="date" id="search-date-native" class="date-native-picker" aria-label="Chọn ngày"></span></div>
               <div class="date-popover-actions"><button type="button" id="clear-date">Xóa ngày</button><button type="button" class="apply-date">Tìm kiếm</button>
               </div>
             </div>
@@ -54,9 +55,22 @@
             <div>
               <label for="post-date">Ngày
               </label>
-              <input id="post-date" type="date">
+              <input id="post-date" type="text" inputmode="numeric" placeholder="dd/mm/yyyy" maxlength="10" pattern="(?:0[1-9]|[12][0-9]|3[01])/(?:0[1-9]|1[0-2])/[0-9]{4}" title="Nhập ngày theo định dạng dd/mm/yyyy">
             </div>
           </div>
+          <section class="location-picker" aria-labelledby="location-map-title">
+            <div class="location-picker-heading">
+              <div>
+                <h2 id="location-map-title">Ghim vị trí trên bản đồ</h2>
+                <p class="field-hint">Chọn vị trí gần nơi thất lạc/nhặt được. Vị trí ghim sẽ hiển thị cho người xem tin.</p>
+              </div>
+              <button class="button button-outline" type="button" id="use-current-location">Dùng vị trí hiện tại</button>
+            </div>
+            <div id="post-location-map" class="location-map" role="application" aria-label="Bản đồ chọn vị trí"></div>
+            <p class="map-feedback" id="map-feedback" aria-live="polite">Nhấn vào bản đồ để ghim vị trí.</p>
+            <input id="post-latitude" type="hidden">
+            <input id="post-longitude" type="hidden">
+          </section>
           <label for="post-contact">Thông tin liên hệ <span class="required">*</span>
           </label>
           <input id="post-contact" maxlength="160" placeholder="Số điện thoại, Zalo hoặc email" required>
@@ -80,6 +94,7 @@
     </footer>
     <script src="../js/storage.js">
     </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="../js/app.js">
     </script>
   </body>

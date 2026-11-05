@@ -19,7 +19,7 @@
             <div class="date-popover" id="date-popover" hidden>
               <label for="search-date">Ngày xảy ra
               </label>
-              <input type="date" id="search-date">
+              <div class="date-input-row"><input type="text" id="search-date" inputmode="numeric" placeholder="dd/mm/yyyy" maxlength="10" pattern="(?:0[1-9]|[12][0-9]|3[01])/(?:0[1-9]|1[0-2])/[0-9]{4}" title="Nhập ngày theo định dạng dd/mm/yyyy"><span class="date-picker-control"><button type="button" aria-label="Chọn ngày"><svg class="date-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 3.5v3M16.5 3.5v3M3.5 9.5h17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button><input type="date" id="search-date-native" class="date-native-picker" aria-label="Chọn ngày"></span></div>
               <div class="date-popover-actions"><button type="button" id="clear-date">Xóa ngày</button><button type="button" class="apply-date" id="apply-date">Tìm kiếm</button>
               </div>
             </div>

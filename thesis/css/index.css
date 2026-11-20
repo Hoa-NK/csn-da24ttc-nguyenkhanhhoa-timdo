@@ -64,3 +64,6 @@ body[data-page="home"] .container { padding-top: 19px; }
   .section-heading .text-link { font-size: 12px; }
   .latest-section .post-grid { grid-template-columns: 1fr; }
 }
+/* Poster trang chủ */
+.poster { position: relative; overflow: hidden; padding: 0; border: none; }
+.poster img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: left center; }

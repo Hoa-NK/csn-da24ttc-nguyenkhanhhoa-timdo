@@ -18,7 +18,10 @@ function renderLayout(){
   const header=$('#site-header');
   if(header){
     const actions=$('#nav-actions');
-    if(currentUser)actions.innerHTML=`<div class="account-menu"><button type="button" class="account-trigger" id="account-trigger" aria-expanded="false" aria-controls="account-dropdown"><svg class="person-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M4.8 20c.6-3.6 3.2-5.5 7.2-5.5s6.6 1.9 7.2 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="account-name">${escapeHTML(currentUser.name)}</span><span class="chevron" aria-hidden="true">▼</span></button><div class="account-dropdown" id="account-dropdown" hidden><a href="account.html">Thông tin tài khoản</a><a href="my-posts.html">${isAdmin()?'Quản lý bài đăng':'Bài đăng của tôi'}</a><button type="button" class="logout-item" id="logout-button">Đăng xuất</button></div></div>`;
+    const accountControl=currentUser
+      ?`<div class="account-menu"><button type="button" class="account-trigger" id="account-trigger" aria-expanded="false" aria-controls="account-dropdown"><svg class="person-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M4.8 20c.6-3.6 3.2-5.5 7.2-5.5s6.6 1.9 7.2 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="account-name">${escapeHTML(currentUser.name)}</span><span class="chevron" aria-hidden="true">▼</span></button><div class="account-dropdown" id="account-dropdown" hidden><a href="account.html">Thông tin tài khoản</a><a href="my-posts.html">${isAdmin()?'Quản lý bài đăng':'Bài đăng của tôi'}</a><button type="button" class="logout-item" id="logout-button">Đăng xuất</button></div></div>`
+      :`<a class="header-link" href="login.html">Đăng nhập</a>`;
+    actions.innerHTML=`<a class="button nav-post-button" href="${currentUser?'post-form.html':'login.html?next=post-form.html'}">Đăng tin</a>${accountControl}`;
     const lostLink=$('#report-lost'),foundLink=$('#report-found');
     if(currentUser&&lostLink&&foundLink){lostLink.href='post-form.html?type=lost';
       foundLink.href='post-form.html?type=found'}
@@ -35,8 +38,12 @@ function renderLayout(){
       date.value=datePicker.value?displayDate(datePicker.value):'';
       date.setCustomValidity('');
     });
-    $('#search-form').addEventListener('submit',event=>{event.preventDefault();
+    const searchForm=$('#search-form');
+    searchForm.noValidate=true;
+    searchForm.addEventListener('submit',event=>{event.preventDefault();
       goSearch(q.value,date.value)});
+    q.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();
+        goSearch(q.value,date.value)}});
     $('#date-toggle').addEventListener('click',()=>{const pop=$('#date-popover'),show=pop.hidden;
       pop.hidden=!show;
       $('#date-toggle').setAttribute('aria-expanded',String(show));
@@ -64,7 +71,7 @@ function goSearch(q,date){const dateInput=$('#search-date'),normalizedDate=date?
   if(date&&!normalizedDate){dateInput.setCustomValidity('Ngày cần đúng định dạng dd/mm/yyyy và là ngày hợp lệ.');
     dateInput.reportValidity();
     return}
-  const target=new URL('index.html',location.href);
+  const target=new URL('posts.html',document.baseURI);
   if(q.trim())target.searchParams.set('q',q.trim());
   if(normalizedDate)target.searchParams.set('date',normalizedDate);
   location.href=target.href}
@@ -77,9 +84,14 @@ function renderPostCard(post,mine=false){
 function bindFilters(){
   const grid=$('#post-grid');
   if(!grid)return;
+  const isHome=page==='home';
+  if(isHome&&(queryParam('q')||queryParam('date'))){
+    location.replace(new URL(`posts.html${location.search}`,document.baseURI).href);
+    return;
+  }
   const isMine=page==='my-posts';
   if(isMine&&!currentUser){location.replace('login.html?next=my-posts.html');
-    return}let filter='all';
+    return}let filter=isHome?'recent':'all';
   const searchTerm=(queryParam('q')||'').trim(),q=searchTerm.toLocaleLowerCase('vi'),date=queryParam('date')||'';
   const all=getPosts();
   let visible=isMine?all.filter(post=>currentUser&&(isAdmin()||post.owner===currentUser.id)):all;
@@ -92,15 +104,17 @@ function bindFilters(){
     draw()}));
   function draw(){
     const cutoff=Date.now()-7*86400000;
-    const found=visible.filter(post=>{
+    const filtered=visible.filter(post=>{
       const haystack=[post.title,post.description,post.place].join(' ').toLocaleLowerCase('vi');
-      return(filter==='all'||filter==='recent'?true:post.type===filter)&&(!q||haystack.includes(q))&&(!date||post.date===date)&&(filter!=='recent'||Number(post.created)>=cutoff);
+      return(filter==='all'||filter==='recent'?true:post.type===filter)&&(!q||haystack.includes(q))&&(!date||post.date===date)&&(isHome||filter!=='recent'||Number(post.created)>=cutoff);
     }).sort((a,b)=>Number(b.created)-Number(a.created));
+    const found=isHome?filtered.slice(0,3):filtered;
     const title=$('#listing-title'),count=$('#result-count');
     if(title&&(q||date)){
       const terms=[searchTerm,date?displayDate(date):''].filter(Boolean);
       title.textContent=`Tìm kiếm: ${terms.join(' · ')}`;
-    }else if(title&&isMine)title.textContent='Bài đăng của bạn';
+    }else if(title&&isHome)title.textContent='Bài đăng mới nhất';
+    else if(title&&isMine)title.textContent='Bài đăng của bạn';
     else if(title)title.textContent=({all:'Tất cả bài đăng',found:'Đồ nhặt được',lost:'Đồ thất lạc',recent:'Mới nhất'})[filter];
     if(count)count.textContent=`${found.length} bài đăng`;
     grid.innerHTML=found.length?found.map(post=>renderPostCard(post,isMine)).join(''):'<div class="empty-state">Không tìm thấy bài đăng nào</div>';
@@ -238,7 +252,7 @@ function bindPostForm(){
   if(!currentUser){location.replace(`login.html?next=${encodeURIComponent(location.pathname.split('/').pop()+location.search)}`);
     return}
   const id=queryParam('id'),posts=getPosts(),existing=id?posts.find(post=>post.id===id):null,message=$('#form-message'),form=$('#post-form');
-  if(id&&(!existing||(existing.owner!==currentUser.id&&!isAdmin()))){form.innerHTML='<h2>Không có quyền chỉnh sửa</h2><p>Chỉ người đăng tin hoặc quản trị viên được chỉnh sửa bài này.</p><a class="button" href="my-posts.html">Quay lại bài đăng của tôi</a>';
+  if(id&&(!existing||(existing.owner!==currentUser.id&&!isAdmin()))){form.innerHTML='<h2>Không có quyền chỉnh sửa</h2><p>Chỉ người đăng tin hoặc quản trị viên được chỉnh sửa bài này.</p><a class="button back-button" href="my-posts.html">Quay lại bài đăng của tôi</a>';
     return}
   let imageData=existing?.image||DEFAULT_POST_IMAGE;
   if(existing){$('#post-form-title').textContent='Chỉnh sửa bài đăng';
@@ -296,7 +310,7 @@ function parseFormDate(value){
 }
 function bindPostDetail(){
   const id=queryParam('id'),box=$('#post-detail'),post=getPosts().find(item=>item.id===id);
-  if(!post){box.innerHTML='<section class="not-found panel"><h1>Không tìm thấy bài đăng</h1><p>Bài đăng có thể đã được xóa.</p><a class="button" href="index.html">Về trang chủ</a></section>';
+  if(!post){box.innerHTML='<section class="not-found panel"><h1>Không tìm thấy bài đăng</h1><p>Bài đăng có thể đã được xóa.</p><a class="button back-button" href="index.html">Về trang chủ</a></section>';
     return}
   document.title=`${post.title} – ReFind`;
   const own=currentUser&&currentUser.id===post.owner;
@@ -304,8 +318,9 @@ function bindPostDetail(){
   const hasLocation=validCoordinates(post.latitude,post.longitude);
   const mapLink=hasLocation?`<a class="map-open-link" href="https://www.openstreetmap.org/?mlat=${encodeURIComponent(post.latitude)}&mlon=${encodeURIComponent(post.longitude)}#map=18/${encodeURIComponent(post.latitude)}/${encodeURIComponent(post.longitude)}" target="_blank" rel="noopener">Mở vị trí trên OpenStreetMap</a>`:'';
   const canManage=Boolean(own||isAdmin());
-  const management=canManage?`<div class="detail-actions"><label class="sr-only" for="post-status">Trạng thái bài đăng</label><select id="post-status"><option value="open">${post.type==='found'?'Đang giữ':'Đang tìm'}</option><option value="done">${post.type==='found'?'Đã trả lại':'Đã tìm thấy'}</option></select><a class="button button-outline" href="post-form.html?id=${encodeURIComponent(post.id)}">Chỉnh sửa</a><button class="button button-danger" id="delete-detail-post" type="button">Xóa tin</button></div>`:'';
-  box.innerHTML=`<a class="detail-back" href="index.html">Quay lại</a><section class="detail-layout"><div class="detail-image">${image||'<span aria-hidden="true">'+(post.type==='found'?'🎒':'🔍')+'</span>'}</div><div class="detail-copy"><div class="detail-badges"><span class="tag tag-type">${typeLabel(post.type)}</span><span class="tag ${post.status==='done'?'status-done':'status-open'}">${statusLabel(post)}</span></div><h1>${escapeHTML(post.title)}</h1><p class="description">${escapeHTML(post.description||'Chưa có mô tả.')}</p><p><strong>Địa điểm:</strong> ${escapeHTML(post.place||'Chưa cập nhật')}</p><p><strong>Ngày xảy ra:</strong> ${displayDate(post.date)}</p><p><strong>Liên hệ:</strong> ${escapeHTML(post.contact)}</p>${management}</div></section><section class="detail-map-section"><h2>Vị trí</h2><div id="detail-location-map" class="detail-location-map" aria-label="Bản đồ vị trí bài đăng"></div>${mapLink}</section>`;
+  const statusControl=canManage?`<div class="detail-status-control"><label for="post-status">Cập nhật trạng thái</label><select id="post-status"><option value="open">${post.type==='found'?'Đang giữ':'Đang tìm'}</option><option value="done">${post.type==='found'?'Đã trả lại':'Đã tìm thấy'}</option></select></div>`:`<span class="tag detail-status-static">${statusLabel(post)}</span>`;
+  const management=canManage?`<div class="detail-actions"><a class="button button-outline" href="post-form.html?id=${encodeURIComponent(post.id)}">Chỉnh sửa</a><button class="button button-danger" id="delete-detail-post" type="button">Xóa tin</button></div>`:'';
+  box.innerHTML=`<div class="page-title-bar detail-page-bar"><a class="bar-back" href="posts.html">Quay lại</a><h1>${typeLabel(post.type)}</h1>${statusControl}</div><section class="detail-layout"><div class="detail-image">${image||'<span aria-hidden="true">'+(post.type==='found'?'🎒':'🔍')+'</span>'}</div><div class="detail-copy panel"><h2>${escapeHTML(post.title)}</h2><p class="description">${escapeHTML(post.description||'Chưa có mô tả.')}</p><div class="detail-facts"><p><strong>Địa điểm</strong><span>${escapeHTML(post.place||'Chưa cập nhật')}</span></p><p><strong>Ngày xảy ra</strong><span>${displayDate(post.date)}</span></p><p><strong>Liên hệ</strong><span>${escapeHTML(post.contact)}</span></p></div>${management}</div></section><section class="detail-map-section panel"><h2>Vị trí</h2><div id="detail-location-map" class="detail-location-map" aria-label="Bản đồ vị trí bài đăng"></div>${mapLink}</section>`;
   createLocationMap({
     container:$('#detail-location-map'),
     latitude:post.latitude,
@@ -321,7 +336,7 @@ function bindPostDetail(){
     $('#delete-detail-post').addEventListener('click',()=>{if(!confirm('Bạn có chắc muốn xóa bài đăng này? Hành động này không thể hoàn tác.'))return;
       if(savePosts(getPosts().filter(item=>item.id!==id)))location.href='my-posts.html'})}
 }
-if(page==='home'||page==='my-posts')bindFilters();
+if(page==='home'||page==='posts'||page==='my-posts')bindFilters();
 if(page==='login')bindLogin();
 if(page==='register')bindRegister();
 if(page==='account')bindAccount();

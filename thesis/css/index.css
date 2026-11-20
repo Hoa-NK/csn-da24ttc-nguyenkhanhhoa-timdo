@@ -1,102 +1,66 @@
-.home-top {
+.home-hero {
   display: grid;
-  grid-template-columns: 238px minmax(0,1fr);
-  gap: 20px;
-  margin-bottom: 34px;
+  grid-template-columns: 3fr 7fr;
+  align-items: stretch;
+  gap: clamp(24px, 4vw, 54px);
+  min-height: 320px;
+  margin-bottom: 32px;
+  padding: clamp(14px, 2.5vw, 29px);
+  border: 1px solid var(--cloud);
+  border-radius: 28px;
+  background: linear-gradient(120deg, #DDE6ED 0%, rgba(157,178,191,.3) 100%);
 }
-.filters {
-  align-self: start;
-  padding: 18px;
-}
-.filters h2 {
-  margin: 0 0 13px;
-  font-size: 17px;
-}
-.filters .filter-chips {
+body[data-page="home"] .container { padding-top: 19px; }
+.home-categories { display: grid; align-content: center; gap: 7px; }
+.category-card {
+  display: grid;
+  min-height: 58px;
   grid-template-columns: 1fr;
-}
-.filter-actions {
-  display: grid;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.filter-actions .button {
-  min-height: 48px;
+  align-items: center;
   padding: 12px 14px;
-  text-align: center;
-  font-size: 15px;
+  border: 1px solid rgba(82,109,130,.22);
+  border-radius: 15px;
+  background: rgba(255,255,255,.68);
+  color: var(--navy);
+  transition: transform .16s, background .16s, box-shadow .16s;
 }
+.category-card:hover { background: #fff; box-shadow: 0 9px 20px rgba(39,55,77,.08); }
+.category-card.category-all { border-color: var(--navy); background: var(--navy); color: #fff; }
+.category-card.category-all:hover { background: var(--slate); }
+.category-card strong { font-size: 15px; }
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cloud);
+  font-size: 14px;
+  font-weight: 700;
+}
+.text-link:hover { color: #fff; }
 .poster {
-  position: relative;
-  min-height: 0;
-  overflow: hidden;
-  padding: 0;
+  min-height: 240px;
+  border: 1px dashed var(--mist);
+  border-radius: 20px;
+  background: rgba(255,255,255,.36);
+  box-shadow: none;
 }
-.poster-image {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
+.listing-section { margin-top: 0; }
+.section-heading { justify-content: space-between; margin-bottom: 20px; }
+.section-all-link { min-height: 39px; flex: none; padding: 8px 13px; border-color: var(--cloud); background: #fff; color: var(--navy); font-size: 13px; }
+.section-all-link:hover { border-color: var(--cloud); background: var(--cloud); }
+.latest-section .post-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media(max-width: 850px) {
+  .home-hero { grid-template-columns: 3fr 7fr; gap: 22px; padding: 17px; }
+  .poster { min-height: 210px; }
+  .latest-section .post-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-.poster-photo {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.listing-section {
-  margin-top: 10px;
-}
-.listing-filter-bar {
-  margin: 0 0 16px;
-  padding: 12px 17px;
-  border-radius: 10px;
-  background: var(--red);
-  color: #fff;
-  font-size: 18px;
-  font-weight: 750;
-  line-height: 1.3;
-  box-shadow: 0 5px 14px rgba(140,16,32,.14);
-}
-@media(max-width:900px) {
-  .home-top {
-    grid-template-columns: 205px minmax(0,1fr);
-  }
-  .filters {
-    padding: 14px;
-  }
-}
-@media(max-width:620px) {
-  .home-top {
-    grid-template-columns: 1fr;
-    gap: 13px;
-    margin-bottom: 27px;
-  }
-  .filters {
-    padding: 13px;
-  }
-  .filters .filter-chips {
-    grid-template-columns: repeat(2,minmax(0,1fr));
-  }
-  .chip {
-    padding: 8px 9px;
-    font-size: 13px;
-  }
-  .filter-actions {
-    grid-template-columns: 1fr 1fr;
-  }
-  .filter-actions .button {
-    min-height: 48px;
-    padding: 10px 8px;
-    font-size: 13px;
-  }
-  .poster {
-    aspect-ratio: 16/9;
-  }
-}
-@media(max-width:390px) {
-  .filter-actions {
-    grid-template-columns: 1fr;
-  }
+@media(max-width: 620px) {
+  body[data-page="home"] .container { padding-top: 13px; }
+  .home-hero { grid-template-columns: 1fr; gap: 16px; min-height: 0; margin-bottom: 22px; padding: 8px; border-radius: 18px; }
+  .category-card { min-height: 48px; padding: 10px 12px; }
+  .category-card strong { font-size: 14px; }
+  .poster { min-height: 120px; border-radius: 14px; }
+  .section-heading { margin-bottom: 15px; }
+  .section-heading .text-link { font-size: 12px; }
+  .latest-section .post-grid { grid-template-columns: 1fr; }
 }

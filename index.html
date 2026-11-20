@@ -4,7 +4,7 @@
     <base href="thesis/html/">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#c82032">
+    <meta name="theme-color" content="#27374D">
     <title>ReFind – Tìm kiếm đồ thất lạc
     </title>
     <link rel="stylesheet" href="../css/common.css">
@@ -30,22 +30,16 @@
       </div>
     </header>
     <main class="container">
-      <section class="home-top" aria-label="Tìm kiếm và lọc bài đăng">
-        <aside class="filters panel">
-          <div class="filter-actions"><a class="button" id="report-lost" href="login.html?next=post-form.html%3Ftype%3Dlost">Báo mất đồ</a><a class="button button-outline" id="report-found" href="login.html?next=post-form.html%3Ftype%3Dfound">Báo nhặt được đồ</a>
-          </div>
-        </aside>
-        <section class="poster panel" aria-label="Giới thiệu ReFind">
-          <div class="poster-image"><img src="../assets/poster.png" alt="Poster ReFind" class="poster-photo">
-          </div>
-        </section>
+      <section class="home-hero" aria-label="ReFind Đại học Trà Vinh">
+        <div class="home-categories" aria-label="Danh mục bài đăng">
+          <a class="category-card category-all" href="posts.html"><strong>Tất cả bài đăng</strong></a>
+          <a class="category-card" id="report-lost" href="login.html?next=post-form.html%3Ftype%3Dlost"><strong>Báo mất đồ</strong></a>
+          <a class="category-card" id="report-found" href="login.html?next=post-form.html%3Ftype%3Dfound"><strong>Báo nhặt được đồ</strong></a>
+        </div>
+        <div class="poster panel" aria-label="Khu vực poster"></div>
       </section>
-      <section class="listing-section" aria-label="Danh sách bài đăng">
-        <div class="listing-filter-bar" id="listing-title">
-          Tất cả
-        </div>
-        <div class="filter-chips page-chips" role="group" aria-label="Lọc sản phẩm"><button class="chip is-active" type="button" data-filter="all">Tất cả</button><button class="chip" type="button" data-filter="found">Đồ nhặt được</button><button class="chip" type="button" data-filter="lost">Đồ thất lạc</button><button class="chip" type="button" data-filter="recent">Mới nhất</button>
-        </div>
+      <section class="listing-section latest-section" aria-label="Bài đăng mới nhất">
+        <div class="section-heading page-title-bar"><h2 id="listing-title">Bài đăng mới nhất</h2><a class="button section-all-link" href="posts.html">Xem tất cả bài đăng</a></div>
         <div class="post-grid" id="post-grid" aria-live="polite">
         </div>
       </section>

@@ -119,3 +119,15 @@
   .detail-facts p { grid-template-columns: 1fr; gap: 2px; }
   .detail-map-section { padding: 15px; }
 }
+.contact-link { color: var(--navy); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.contact-login {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--cloud);
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+.contact-login:hover { background: var(--mist); }

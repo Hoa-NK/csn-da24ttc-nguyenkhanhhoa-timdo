@@ -12,7 +12,23 @@ ensureDefaultAdmin();
 const currentUser=getMe();
 const isAdmin=()=>Boolean(currentUser&&getUsers().some(user=>user.id===currentUser.id&&user.role==='admin'));
 const safeNext=()=>{const next=queryParam('next')||'index.html';
-  return ['index.html','my-posts.html','account.html'].includes(next)||/^post-form\.html(?:\?type=(?:lost|found))?$/.test(next)?next:'index.html'};
+  return ['index.html','my-posts.html','account.html'].includes(next)||/^post-form\.html(?:\?type=(?:lost|found))?$/.test(next)||/^post\.html\?id=[\w-]+$/.test(next)?next:'index.html'};
+function maskContact(contact){
+  const value=String(contact||'').trim();
+  const email=value.match(/^([^@\s]+)@(\S+)$/);
+  if(email)return `${email[1].slice(0,2)}***@${email[2]}`;
+  const digits=value.replace(/\D/g,'');
+  if(digits.length>=8)return `${digits.slice(0,4)}***${digits.slice(-3)}`;
+  return value.length>3?`${value.slice(0,3)}***`:'***';
+}
+function renderContact(post){
+  if(currentUser){
+    const phone=String(post.contact||'').replace(/[^\d+]/g,'');
+    return /^\+?\d{8,15}$/.test(phone)?`<a class="contact-link" href="tel:${phone}">${escapeHTML(post.contact)}</a>`:escapeHTML(post.contact);
+  }
+  const next=encodeURIComponent(`post.html?id=${post.id}`);
+  return `${escapeHTML(maskContact(post.contact))} <a class="contact-login" href="login.html?next=${next}">Đăng nhập để xem</a>`;
+}
 
 function renderLayout(){
   const header=$('#site-header');
@@ -64,8 +80,38 @@ function renderLayout(){
           trigger.setAttribute('aria-expanded','false')}});
     }
   }
+  renderFooter();
+}
+function renderFooter(){
   const footer=$('#site-footer');
-  if(footer)footer.textContent='ReFind';
+  if(!footer)return;
+  footer.className='site-footer';
+  const postLink=type=>currentUser?`post-form.html?type=${type}`:`login.html?next=${encodeURIComponent(`post-form.html?type=${type}`)}`;
+  const accountLinks=currentUser
+    ?`<li><a href="my-posts.html">${isAdmin()?'Quản lý bài đăng':'Bài đăng của tôi'}</a></li><li><a href="account.html">Thông tin tài khoản</a></li>`
+    :`<li><a href="login.html">Đăng nhập</a></li><li><a href="register.html">Đăng ký tài khoản</a></li>`;
+  footer.innerHTML=`<div class="footer-inner">
+    <div class="footer-brand">
+      <a class="footer-logo" href="index.html" aria-label="ReFind, trang chủ"><img src="../assets/logo.png" alt=""><span>ReFind</span></a>
+      <p>Website đăng tin và tra cứu đồ thất lạc dành cho sinh viên Trường Đại học Trà Vinh. Mất đồ hay nhặt được đồ, hãy đăng tin để đồ sớm về đúng chủ.</p>
+    </div>
+    <nav class="footer-col" aria-label="Khám phá">
+      <h2>Khám phá</h2>
+      <ul><li><a href="index.html">Trang chủ</a></li><li><a href="posts.html">Tất cả bài đăng</a></li><li><a href="posts.html?type=lost">Đồ thất lạc</a></li><li><a href="posts.html?type=found">Đồ nhặt được</a></li><li><a href="about.html">Giới thiệu & Hướng dẫn</a></li></ul>
+    </nav>
+    <nav class="footer-col" aria-label="Đăng tin và tài khoản">
+      <h2>Đăng tin</h2>
+      <ul><li><a href="${postLink('lost')}">Báo mất đồ</a></li><li><a href="${postLink('found')}">Báo nhặt được đồ</a></li>${accountLinks}</ul>
+    </nav>
+    <div class="footer-col footer-tips">
+      <h2>Lưu ý khi nhận đồ</h2>
+      <ul><li>Hẹn gặp ở nơi công cộng trong trường.</li><li>Hỏi đặc điểm riêng của món đồ để xác minh chủ.</li><li>Cập nhật trạng thái tin sau khi đã trả đồ.</li></ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© ${new Date().getFullYear()} ReFind · Đồ án cơ sở ngành – Lớp DA24TTC, Khoa Công nghệ Thông tin, Trường Đại học Trà Vinh</p>
+    <p>Thực hiện: Nguyễn Khánh Hòa · GVHD: ThS. Dương Ngọc Vân Khanh</p>
+  </div>`;
 }
 function goSearch(q,date){const dateInput=$('#search-date'),normalizedDate=date?parseFormDate(date):'';
   if(date&&!normalizedDate){dateInput.setCustomValidity('Ngày cần đúng định dạng dd/mm/yyyy và là ngày hợp lệ.');
@@ -92,6 +138,9 @@ function bindFilters(){
   const isMine=page==='my-posts';
   if(isMine&&!currentUser){location.replace('login.html?next=my-posts.html');
     return}let filter=isHome?'recent':'all';
+  const typeParam=queryParam('type');
+  if(page==='posts'&&(typeParam==='lost'||typeParam==='found')){filter=typeParam;
+    document.querySelectorAll('[data-filter]').forEach(item=>item.classList.toggle('is-active',item.dataset.filter===typeParam))}
   const searchTerm=(queryParam('q')||'').trim(),q=searchTerm.toLocaleLowerCase('vi'),date=queryParam('date')||'';
   const all=getPosts();
   let visible=isMine?all.filter(post=>currentUser&&(isAdmin()||post.owner===currentUser.id)):all;
@@ -125,9 +174,14 @@ function bindFilters(){
   draw();
 }
 
+function keepNextOnSwitch(){
+  const link=$('#switch-link'),next=queryParam('next');
+  if(link&&next)link.href=`${link.getAttribute('href')}?next=${encodeURIComponent(next)}`;
+}
 function bindLogin(){
   if(getMe()){location.replace('index.html');
     return}
+  keepNextOnSwitch();
   $('#login-form').addEventListener('submit',event=>{event.preventDefault();
     const identity=$('#identity').value.trim().toLowerCase(),password=$('#password').value;
     const user=getUsers().find(item=>item.passwordHash===hashPassword(password)&&(item.email.toLowerCase()===identity||(item.username||'').toLowerCase()===identity));
@@ -138,6 +192,7 @@ function bindLogin(){
 function bindRegister(){
   if(getMe()){location.replace('index.html');
     return}
+  keepNextOnSwitch();
   $('#register-form').addEventListener('submit',event=>{event.preventDefault();
     const name=$('#name').value.trim(),username=$('#username').value.trim().toLowerCase(),email=$('#email').value.trim().toLowerCase(),password=$('#password').value,message=$('#form-message');
     if(!name){message.textContent='Vui lòng nhập họ tên.';
@@ -150,7 +205,7 @@ function bindRegister(){
       return}if(users.some(user=>(user.username||'').toLowerCase()===username)){message.textContent='Tên đăng nhập này đã được sử dụng.';
       return}const user={id:`u${Date.now()}`,name,username,email,passwordHash:hashPassword(password)};
     users.push(user);
-    if(saveUsers(users)&&setMe({id:user.id,name:user.name,role:'user'}))location.href='index.html'});
+    if(saveUsers(users)&&setMe({id:user.id,name:user.name,role:'user'}))location.href=safeNext()});
 }
 function bindAccount(){
   const user=getUsers().find(item=>currentUser&&item.id===currentUser.id);
@@ -320,7 +375,7 @@ function bindPostDetail(){
   const canManage=Boolean(own||isAdmin());
   const statusControl=canManage?`<div class="detail-status-control"><label for="post-status">Cập nhật trạng thái</label><select id="post-status"><option value="open">${post.type==='found'?'Đang giữ':'Đang tìm'}</option><option value="done">${post.type==='found'?'Đã trả lại':'Đã tìm thấy'}</option></select></div>`:`<span class="tag detail-status-static">${statusLabel(post)}</span>`;
   const management=canManage?`<div class="detail-actions"><a class="button button-outline" href="post-form.html?id=${encodeURIComponent(post.id)}">Chỉnh sửa</a><button class="button button-danger" id="delete-detail-post" type="button">Xóa tin</button></div>`:'';
-  box.innerHTML=`<div class="page-title-bar detail-page-bar"><a class="bar-back" href="posts.html">Quay lại</a><h1>${typeLabel(post.type)}</h1>${statusControl}</div><section class="detail-layout"><div class="detail-image">${image||'<span aria-hidden="true">'+(post.type==='found'?'🎒':'🔍')+'</span>'}</div><div class="detail-copy panel"><h2>${escapeHTML(post.title)}</h2><p class="description">${escapeHTML(post.description||'Chưa có mô tả.')}</p><div class="detail-facts"><p><strong>Địa điểm</strong><span>${escapeHTML(post.place||'Chưa cập nhật')}</span></p><p><strong>Ngày xảy ra</strong><span>${displayDate(post.date)}</span></p><p><strong>Liên hệ</strong><span>${escapeHTML(post.contact)}</span></p></div>${management}</div></section><section class="detail-map-section panel"><h2>Vị trí</h2><div id="detail-location-map" class="detail-location-map" aria-label="Bản đồ vị trí bài đăng"></div>${mapLink}</section>`;
+  box.innerHTML=`<div class="page-title-bar detail-page-bar"><a class="bar-back" href="posts.html">Quay lại</a><h1>${typeLabel(post.type)}</h1>${statusControl}</div><section class="detail-layout"><div class="detail-image">${image||'<span aria-hidden="true">'+(post.type==='found'?'🎒':'🔍')+'</span>'}</div><div class="detail-copy panel"><h2>${escapeHTML(post.title)}</h2><p class="description">${escapeHTML(post.description||'Chưa có mô tả.')}</p><div class="detail-facts"><p><strong>Địa điểm</strong><span>${escapeHTML(post.place||'Chưa cập nhật')}</span></p><p><strong>Ngày xảy ra</strong><span>${displayDate(post.date)}</span></p><p><strong>Liên hệ</strong><span>${renderContact(post)}</span></p></div>${management}</div></section><section class="detail-map-section panel"><h2>Vị trí</h2><div id="detail-location-map" class="detail-location-map" aria-label="Bản đồ vị trí bài đăng"></div>${mapLink}</section>`;
   createLocationMap({
     container:$('#detail-location-map'),
     latitude:post.latitude,
@@ -342,4 +397,6 @@ if(page==='register')bindRegister();
 if(page==='account')bindAccount();
 if(page==='post-form')bindPostForm();
 if(page==='post')bindPostDetail();
+if(page==='about'&&currentUser){const link=$('#about-post-link');
+  if(link)link.href='post-form.html'}
 

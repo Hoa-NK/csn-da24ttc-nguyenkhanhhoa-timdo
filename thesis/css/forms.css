@@ -48,3 +48,18 @@
   .form-page-title-bar { margin-bottom: 14px; }
   .field-row { grid-template-columns: 1fr; gap: 0; }
 }
+.auth-intro {
+  margin: 0 0 6px;
+  padding: 12px 14px;
+  border-left: 4px solid var(--slate);
+  border-radius: 10px;
+  background: var(--cloud);
+  color: var(--navy);
+  font-size: 14px;
+}
+.auth-panel .form-switch {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--cloud);
+  text-align: left;
+}

@@ -25,7 +25,8 @@ Khách (chưa đăng nhập):
 - Xem các bài đăng mới nhất ở trang chủ.
 - Xem tất cả bài đăng, lọc theo Tất cả / Đồ nhặt được / Đồ thất lạc.
 - Tìm kiếm theo từ khóa (tên đồ vật, mô tả, địa điểm) và theo ngày xảy ra.
-- Xem chi tiết bài đăng: ảnh, mô tả, địa điểm, ngày, liên hệ, vị trí trên bản đồ.
+- Xem chi tiết bài đăng: ảnh, mô tả, địa điểm, ngày, vị trí trên bản đồ. Số điện thoại liên hệ được che một phần (ví dụ `0327***617`) cho đến khi đăng nhập.
+- Xem trang Giới thiệu & Hướng dẫn sử dụng, có phần câu hỏi thường gặp.
 - Đăng ký, đăng nhập bằng tên đăng nhập hoặc email.
 
 Người dùng đã đăng nhập:
@@ -58,7 +59,7 @@ Quản trị viên:
 ```text
 index.html              Trang chủ ở thư mục gốc (dùng <base href="thesis/html/">)
 thesis/
-├── html/               index, posts, post, post-form, login, register, my-posts, account
+├── html/               index, posts, post, post-form, login, register, my-posts, account, about
 ├── css/
 │   ├── common.css      Biến màu, header, footer, nút, bố cục chung
 │   ├── forms.css       Kiểu chung cho biểu mẫu

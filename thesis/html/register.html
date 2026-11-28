@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#27374D">
+    <meta name="description" content="Tạo tài khoản ReFind để đăng tin báo mất đồ, nhặt được đồ trong Trường Đại học Trà Vinh.">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="500x500" href="../assets/logo.png">
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
     <title>Đăng ký – ReFind
     </title>
     <link rel="stylesheet" href="../css/common.css">
@@ -29,33 +33,50 @@
       </div>
     </header>
     <main class="container narrow-container">
-      <section class="form-panel panel">
-        <div class="form-title-bar"><a class="bar-back" href="index.html">Quay lại</a><h1>Đăng ký ReFind</h1></div>
+      <div class="page-title-bar form-page-title-bar"><a class="bar-back" href="index.html">Quay lại</a><h1>Đăng ký tài khoản</h1></div>
+      <section class="form-panel panel auth-panel">
+        <p class="auth-intro">Tạo tài khoản ReFind miễn phí để đăng tin và theo dõi đồ thất lạc trong trường.</p>
         <form id="register-form">
           <label for="name">Họ tên
           </label>
-          <input id="name" autocomplete="name" required>
-          <label for="username">Tên đăng nhập
-          </label>
-          <input id="username" autocomplete="username" minlength="3" maxlength="24" required>
+          <input id="name" autocomplete="name" placeholder="Ví dụ: Nguyễn Văn A" required>
+          <div class="field-row">
+            <div>
+              <label for="username">Tên đăng nhập
+              </label>
+              <input id="username" autocomplete="username" minlength="3" maxlength="24" required>
+            </div>
+            <div>
+              <label for="email">Email
+              </label>
+              <input id="email" type="email" autocomplete="email" required>
+            </div>
+          </div>
           <p class="field-hint">
-            3–24 ký tự; dùng chữ không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.
+            Tên đăng nhập 3–24 ký tự; dùng chữ không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.
           </p>
-          <label for="email">Email
-          </label>
-          <input id="email" type="email" autocomplete="email" required>
-          <label for="password">Mật khẩu
-          </label>
-          <input id="password" type="password" minlength="6" autocomplete="new-password" required>
-          <label for="password-confirm">Nhập lại mật khẩu
-          </label>
-          <input id="password-confirm" type="password" minlength="6" autocomplete="new-password" required>
+          <div class="field-row">
+            <div>
+              <label for="password">Mật khẩu
+              </label>
+              <input id="password" type="password" minlength="6" autocomplete="new-password" required>
+            </div>
+            <div>
+              <label for="password-confirm">Nhập lại mật khẩu
+              </label>
+              <input id="password-confirm" type="password" minlength="6" autocomplete="new-password" required>
+            </div>
+          </div>
+          <p class="field-hint">
+            Mật khẩu có ít nhất 6 ký tự.
+          </p>
           <p class="form-message" id="form-message" role="alert">
           </p>
-          <button class="button button-wide" type="submit">Tạo tài khoản</button>
+          <div class="form-actions"><button class="button" type="submit">Tạo tài khoản</button><a class="button button-outline" href="index.html">Hủy</a>
+          </div>
         </form>
         <p class="form-switch">
-          Đã có tài khoản? <a href="login.html">Đăng nhập</a>
+          Đã có tài khoản? <a href="login.html" id="switch-link">Đăng nhập</a>
         </p>
       </section>
     </main>
